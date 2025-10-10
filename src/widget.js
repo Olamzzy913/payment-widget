@@ -1,29 +1,3 @@
-// class PaymentWidget {
-//   constructor(config) {
-//     this.config = config;
-//     this.iframe = null;
-//   }
-
-//   init(container) {
-//     if (!container) {
-//       throw new Error('Container element is required');
-//     }
-
-//     this.iframe = document.createElement('iframe');
-//     this.iframe.src = `http://localhost:3001?apiKey=${this.config.apiKey}`;
-//     this.iframe.style.cssText = 'border: none; width: 400px; height: 600px;';
-
-//     container.appendChild(this.iframe);
-
-//     return new Promise((resolve) => {
-//       this.iframe.onload = () => resolve();
-//     });
-//   }
-// }
-
-// export default PaymentWidget;
-
-// src/widget.js
 class PaymentWidget {
   constructor(config) {
     this.config = this.validateConfig(config);
@@ -50,8 +24,8 @@ class PaymentWidget {
   getIframeUrl() {
     const baseUrls = {
       development: "http://localhost:3001",
-      sandbox: "https://your-widget-sandbox.netlify.app",
-      production: "https://your-widget-prod.netlify.app",
+      sandbox: "https://payment-widget-pi.vercel.app",
+      production: "https://payment-widget-pi.vercel.app/",
     };
 
     const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;

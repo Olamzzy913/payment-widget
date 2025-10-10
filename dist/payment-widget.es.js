@@ -24,8 +24,8 @@ class PaymentWidget {
   getIframeUrl() {
     const baseUrls = {
       development: "http://localhost:3001",
-      sandbox: "https://your-widget-sandbox.netlify.app",
-      production: "https://your-widget-prod.netlify.app"
+      sandbox: "https://payment-widget-pi.vercel.app",
+      production: "https://payment-widget-pi.vercel.app/"
     };
     const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;
     const params = new URLSearchParams({
