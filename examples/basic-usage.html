@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Payment Widget</title>
+</head>
+<body>
+    <h1>Test Payment Widget</h1>
+    <div id="payment-container"></div>
+    
+    <script src="../dist/payment-widget.umd.js"></script>
+    <script>
+        const widget = new PaymentWidgetSDK({
+            apiKey: 'test_key_123',
+            amount: 99.99,
+            currency: 'USD'
+        });
+        
+        widget.init(document.getElementById('payment-container'))
+            .then(() => console.log('Widget loaded!'))
+            .catch(err => console.error('Failed:', err));
+            
+        // Listen for payment events
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'PAYMENT_SUCCESS') {
+                alert('Payment successful: ' + event.data.data.id);
+            }
+        });
+    </script>
+</body>
+</html>
