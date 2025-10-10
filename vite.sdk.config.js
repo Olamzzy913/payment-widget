@@ -10,7 +10,7 @@ export default defineConfig({
       fileName: (format) => `payment-widget.${format}.js`,
       formats: ["umd", "es"],
     },
-    outDir: "dist",
+    outDir: "dist/sdk",
     emptyOutDir: false,
     minify: false, // Disable minification for now
   },

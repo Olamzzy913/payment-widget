@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/sdk/(.*)", "destination": "/dist/sdk/$1" }
+  ],
+  "cleanUrls": true
+}
