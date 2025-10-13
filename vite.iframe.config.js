@@ -11,18 +11,11 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: resolve(__dirname, 'src/iframe-app/index.html')
-    }
+    },
+    // Add these for better production build
+    assetsDir: 'assets',
+    sourcemap: false
   },
-  server: {
-    port: 3001,
-    cors: true,
-    // Add these server options to fix the dependency issue
-    fs: {
-      allow: ['..']
-    }
-  },
-  // Optimize dependencies to prevent the outdated error
-  optimizeDeps: {
-    include: ['vue']
-  }
+  // Set base path for assets
+  base: './',
 });

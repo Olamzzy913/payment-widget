@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Widget</title>
-    <!-- Add some basic styling to ensure visibility -->
     <style>
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
             background: #f5f5f5;
+            min-height: 100vh;
         }
         #app {
             min-height: 100vh;
@@ -22,6 +22,7 @@
 </head>
 <body>
     <div id="app"></div>
-    <script type="module" src="./src/main.js"></script>
+    <!-- Remove type="module" for production -->
+    <script src="./src/main.js"></script>
 </body>
 </html>

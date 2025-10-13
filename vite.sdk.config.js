@@ -11,8 +11,10 @@ export default defineConfig({
     },
     outDir: "dist/sdk",
     emptyOutDir: true,
+    // Add assets configuration
+    assetsDir: '',
+    sourcemap: false
   },
-  server: {
-    port: 3000,
-  },
+  // Set base path
+  base: './',
 });

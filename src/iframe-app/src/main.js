@@ -1,19 +1,32 @@
-import { createApp } from "vue";
-import App from "./App.vue";
+import { createApp } from 'vue';
+import App from './App.vue';
 
-// Add error handling
-try {
-  console.log("Initializing Vue app...");
-  const app = createApp(App);
-  app.mount("#app");
-  console.log("Vue app mounted successfully");
-} catch (error) {
-  console.error("Failed to mount Vue app:", error);
-  // Fallback: Show error message in the app
-  document.getElementById("app").innerHTML = `
-    <div style="padding: 20px; text-align: center; color: red;">
-      <h2>Payment Widget Error</h2>
-      <p>${error.message}</p>
-    </div>
-  `;
+// Production-ready initialization
+function initApp() {
+  try {
+    const app = createApp(App);
+    app.mount('#app');
+    
+    // Notify parent if in iframe
+    if (window.parent !== window) {
+      setTimeout(() => {
+        window.parent.postMessage({ type: "WIDGET_READY" }, "*");
+      }, 100);
+    }
+  } catch (error) {
+    console.error('Failed to initialize payment widget:', error);
+    document.getElementById('app').innerHTML = `
+      <div style="padding: 20px; text-align: center;">
+        <h3>Payment Widget</h3>
+        <p>Unable to load payment options. Please refresh.</p>
+      </div>
+    `;
+  }
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
 }
