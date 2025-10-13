@@ -2,7 +2,6 @@
   <div class="payment-container">
     <div class="payment-widget-card">
       <h2 class="text-xl font-semibold mb-4 text-center">Omavon</h2>
-
       <h2 class="text-xl font-semibold mb-4 text-center">
         Select Payment Method
       </h2>
@@ -28,7 +27,6 @@
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 stroke-linecap="round"
@@ -59,7 +57,6 @@
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 stroke-linecap="round"
@@ -70,9 +67,7 @@
             </svg>
             <div>
               <p class="font-medium">Bank Transfer</p>
-              <p class="text-sm text-gray-500">
-                Pay via secure bank transfer (Like Kora/Paystack)
-              </p>
+              <p class="text-sm text-gray-500">Pay via secure bank transfer</p>
             </div>
           </div>
         </div>
@@ -98,38 +93,23 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 
-// Reactive state for the payment configuration
 const config = ref({
-  amount: 0.0,
-  currency: "USD",
+  amount: 12500.5,
+  currency: "NGN",
 });
 
-// Reactive state for the selected payment method
-const selectedMethod = ref(null); // 'card' or 'transfer'
+const selectedMethod = ref(null);
 
-/**
- * Computed property to display the selected method name for the button text.
- */
 const displayMethodName = computed(() => {
-  if (selectedMethod.value === "card") {
-    return "Card";
-  } else if (selectedMethod.value === "transfer") {
-    return "Bank Transfer";
-  }
+  if (selectedMethod.value === "card") return "Card";
+  if (selectedMethod.value === "transfer") return "Bank Transfer";
   return "Method";
 });
 
-/**
- * Function to set the selected payment method.
- * @param {string} method - The method key ('card' or 'transfer').
- */
 const selectMethod = (method) => {
   selectedMethod.value = method;
 };
 
-/**
- * Handles the payment simulation and sends a message to the parent window.
- */
 const handlePayment = () => {
   if (!selectedMethod.value) return;
 
@@ -137,9 +117,11 @@ const handlePayment = () => {
     id: `txn_${Date.now()}`,
     amount: config.value.amount,
     method: selectedMethod.value,
+    currency: config.value.currency,
+    timestamp: new Date().toISOString(),
   };
 
-  // Simulate success message
+  // Send success message to parent
   window.parent.postMessage(
     {
       type: "PAYMENT_SUCCESS",
@@ -148,61 +130,59 @@ const handlePayment = () => {
     "*"
   );
 
-  console.log("Simulating Payment with:", paymentData);
+  console.log("Payment simulation:", paymentData);
 };
 
-// --- Lifecycle Hook and Event Listeners ---
 onMounted(() => {
-  // 1. Notify parent the widget is ready
+  console.log("App.vue mounted successfully");
+
+  // Notify parent that widget is ready
   window.parent.postMessage({ type: "WIDGET_READY" }, "*");
 
-  // 2. Set up listener for configuration updates from the parent
+  // Listen for configuration updates from parent
   window.addEventListener("message", (event) => {
+    console.log("Received message in iframe:", event.data);
+
     if (event.data.type === "INIT_CONFIG") {
-      // Use event.data.data to update the config reactive ref
       config.value = { ...config.value, ...event.data.data };
+      console.log("Config updated:", config.value);
     }
   });
 
-  // *Optional: Simulate initial config load if run standalone*
-  if (config.value.amount === 0) {
-    config.value.amount = 12500.5;
-    config.value.currency = "NGN";
-    // Optional: Automatically select card for demo
+  // Auto-select card for demo
+  setTimeout(() => {
     selectedMethod.value = "card";
-  }
+  }, 100);
 });
 </script>
 
 <style scoped>
-/*
-  The payment-container ensures the max-width and centering (margin auto).
-  Equivalent to: max-width: 400px; margin: 0 auto;
-*/
 .payment-container {
-  max-width: 400px; /* Container width of 400 */
-  margin-left: auto; /* Margin left auto */
-  margin-right: auto; /* Margin right auto */
+  max-width: 400px;
+  margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* The payment-widget-card provides the card styling and internal centering.
-  Equivalent to: display: flex; flex-direction: column; align-items: center; justify-content: center;
-*/
 .payment-widget-card {
   background: white;
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
+  width: 100%;
 }
 
 .payment-method-item {
   display: flex;
   align-items: center;
   padding: 15px;
-  border: 2px solid #e5e7eb; /* Neutral border */
+  border: 2px solid #e5e7eb;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -210,13 +190,13 @@ onMounted(() => {
 }
 
 .payment-method-item:hover {
-  border-color: #9da3ed; /* Light purple hover */
-  background-color: #eff3fe; /* Very light purple background */
+  border-color: #9da3ed;
+  background-color: #eff3fe;
 }
 
 .payment-method-item.selected {
-  border-color: #4f46e5; /* Indigo-600 border for selected */
-  background-color: #eef2ff; /* Indigo-50 background for selected */
+  border-color: #4f46e5;
+  background-color: #eef2ff;
   box-shadow: 0 1px 3px rgba(79, 70, 229, 0.2);
 }
 
@@ -304,9 +284,6 @@ onMounted(() => {
 }
 .bg-gray-300 {
   background-color: #d1d5db;
-}
-.text-gray-500 {
-  color: #6b7280;
 }
 .cursor-not-allowed {
   cursor: not-allowed;

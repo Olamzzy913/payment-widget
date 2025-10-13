@@ -1,114 +1,85 @@
-class PaymentWidget {
-  constructor(config) {
-    this.config = this.validateConfig(config);
-    this.iframe = null;
-    this.isInitialized = false;
+class s {
+  constructor(e) {
+    this.config = this.validateConfig(e), this.iframe = null, this.isInitialized = !1;
   }
-  validateConfig(config) {
-    if (!config.apiKey) {
+  validateConfig(e) {
+    if (!e.apiKey)
       throw new Error("API key is required");
-    }
     return {
-      apiKey: config.apiKey,
-      amount: config.amount || 0,
-      currency: config.currency || "USD",
-      environment: config.environment || "sandbox",
-      onSuccess: config.onSuccess || (() => {
+      apiKey: e.apiKey,
+      amount: e.amount || 0,
+      currency: e.currency || "USD",
+      environment: e.environment || "sandbox",
+      onSuccess: e.onSuccess || (() => {
       }),
-      onError: config.onError || (() => {
+      onError: e.onError || (() => {
       }),
-      onLoad: config.onLoad || (() => {
+      onLoad: e.onLoad || (() => {
       })
     };
   }
   getIframeUrl() {
-    const baseUrls = {
+    const e = {
       development: "http://localhost:3001",
-      sandbox: "https://payment-widget-pi.vercel.app",
-      production: "https://payment-widget-pi.vercel.app/"
+      sandbox: "https://your-vercel-app.vercel.app",
+      production: "https://your-vercel-app.vercel.app"
     };
-    const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;
-    const params = new URLSearchParams({
-      apiKey: this.config.apiKey,
-      amount: this.config.amount,
-      currency: this.config.currency,
-      parent: window.location.origin,
-      version: "1.0.0"
-    });
-    return `${baseUrl}?${params}`;
+    return `${e[this.config.environment] || e.sandbox}/index.html`;
   }
-  init(container) {
-    if (this.isInitialized) {
+  init(e) {
+    if (this.isInitialized)
       throw new Error("Widget already initialized");
-    }
-    if (!container || !(container instanceof HTMLElement)) {
+    if (!e || !(e instanceof HTMLElement))
       throw new Error("Valid container element is required");
-    }
-    return new Promise((resolve, reject) => {
+    return new Promise((i, t) => {
       try {
-        this.iframe = document.createElement("iframe");
-        this.iframe.src = this.getIframeUrl();
-        this.iframe.style.cssText = `
+        this.iframe = document.createElement("iframe"), this.iframe.src = this.getIframeUrl(), this.iframe.style.cssText = `
           border: none;
           width: 100%;
           min-width: 380px;
           height: 600px;
           border-radius: 12px;
           box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        `;
-        this.iframe.onload = () => {
-          this.isInitialized = true;
-          this.config.onLoad();
-          resolve();
-        };
-        this.iframe.onerror = () => {
-          reject(new Error("Failed to load payment widget"));
-        };
-        container.appendChild(this.iframe);
-        this.setupMessageHandling();
-      } catch (error) {
-        reject(error);
+        `, this.iframe.onload = () => {
+          this.isInitialized = !0, this.config.onLoad(), i();
+        }, this.iframe.onerror = () => {
+          t(new Error("Failed to load payment widget"));
+        }, e.appendChild(this.iframe), this.setupMessageHandling();
+      } catch (r) {
+        t(r);
       }
     });
   }
   setupMessageHandling() {
     window.addEventListener("message", this.handleMessage.bind(this));
   }
-  handleMessage(event) {
-    if (!this.isValidOrigin(event.origin)) return;
-    const { type, data } = event.data;
-    switch (type) {
+  handleMessage(e) {
+    if (!this.isValidOrigin(e.origin)) return;
+    const { type: i, data: t } = e.data;
+    switch (i) {
       case "PAYMENT_SUCCESS":
-        this.config.onSuccess(data);
+        this.config.onSuccess(t);
         break;
       case "PAYMENT_ERROR":
-        this.config.onError(data);
+        this.config.onError(t);
         break;
       case "WIDGET_READY":
         console.log("Payment widget ready");
         break;
     }
   }
-  isValidOrigin(origin) {
-    const allowedOrigins = [
+  isValidOrigin(e) {
+    return [
       "http://localhost:3001",
       "https://your-widget-sandbox.netlify.app",
       "https://your-widget-prod.netlify.app"
-    ];
-    return allowedOrigins.includes(origin);
+    ].includes(e);
   }
   destroy() {
-    if (this.iframe && this.iframe.parentNode) {
-      this.iframe.parentNode.removeChild(this.iframe);
-    }
-    this.isInitialized = false;
-    this.iframe = null;
-    window.removeEventListener("message", this.handleMessage);
+    this.iframe && this.iframe.parentNode && this.iframe.parentNode.removeChild(this.iframe), this.isInitialized = !1, this.iframe = null, window.removeEventListener("message", this.handleMessage);
   }
 }
-if (typeof window !== "undefined") {
-  window.PaymentWidgetSDK = PaymentWidget;
-}
+typeof window < "u" && (window.PaymentWidgetSDK = s);
 export {
-  PaymentWidget as default
+  s as default
 };

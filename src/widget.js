@@ -24,20 +24,22 @@ class PaymentWidget {
   getIframeUrl() {
     const baseUrls = {
       development: "http://localhost:3001",
-      sandbox: "https://payment-widget-pi.vercel.app",
-      production: "https://payment-widget-pi.vercel.app/",
+      sandbox: "https://your-vercel-app.vercel.app",
+      production: "https://your-vercel-app.vercel.app",
     };
 
     const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;
-    const params = new URLSearchParams({
-      apiKey: this.config.apiKey,
-      amount: this.config.amount,
-      currency: this.config.currency,
-      parent: window.location.origin,
-      version: "1.0.0",
-    });
 
-    return `${baseUrl}?${params}`;
+    // Remove the query parameters for now since we're serving static files
+    return `${baseUrl}/index.html`;
+
+    // If you need to pass parameters, use hash or implement message-based config
+    // const params = new URLSearchParams({
+    //   apiKey: this.config.apiKey,
+    //   amount: this.config.amount,
+    //   currency: this.config.currency,
+    // });
+    // return `${baseUrl}/index.html#${params.toString()}`;
   }
 
   init(container) {

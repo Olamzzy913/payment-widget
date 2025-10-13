@@ -1,6 +1,19 @@
 {
-  "rewrites": [
-    { "source": "/sdk/(.*)", "destination": "/dist/sdk/$1" }
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/**/*",
+      "use": "@vercel/static"
+    }
   ],
-  "cleanUrls": true
+  "routes": [
+    {
+      "src": "/sdk/(.*)",
+      "dest": "/dist/sdk/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/iframe/index.html"
+    }
+  ]
 }

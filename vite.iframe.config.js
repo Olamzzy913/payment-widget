@@ -1,19 +1,28 @@
-// vite.iframe.config.js
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 
 export default defineConfig({
+  plugins: [vue()],
   root: resolve(__dirname, 'src/iframe-app'),
-  publicDir: resolve(__dirname, 'src/iframe-app/public'),
+  publicDir: false,
   build: {
     outDir: resolve(__dirname, 'dist/iframe'),
     emptyOutDir: true,
-    minify: false // Disable minification for now
+    rollupOptions: {
+      input: resolve(__dirname, 'src/iframe-app/index.html')
+    }
   },
-  plugins: [vue()],
   server: {
     port: 3001,
-    cors: true
+    cors: true,
+    // Add these server options to fix the dependency issue
+    fs: {
+      allow: ['..']
+    }
+  },
+  // Optimize dependencies to prevent the outdated error
+  optimizeDeps: {
+    include: ['vue']
   }
 });

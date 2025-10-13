@@ -1,7 +1,9 @@
 import PaymentWidget from './widget.js';
 
+// For UMD build
 if (typeof window !== 'undefined') {
   window.PaymentWidgetSDK = PaymentWidget;
 }
 
-export default PaymentWidget;
+// For ES modules
+export { PaymentWidget as default };

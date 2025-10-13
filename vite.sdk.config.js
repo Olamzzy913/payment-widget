@@ -1,4 +1,3 @@
-// vite.sdk.config.js
 import { defineConfig } from "vite";
 import { resolve } from "path";
 
@@ -11,8 +10,7 @@ export default defineConfig({
       formats: ["umd", "es"],
     },
     outDir: "dist/sdk",
-    emptyOutDir: false,
-    minify: false, // Disable minification for now
+    emptyOutDir: true,
   },
   server: {
     port: 3000,
