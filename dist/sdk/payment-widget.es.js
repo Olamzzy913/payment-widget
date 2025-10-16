@@ -23,8 +23,8 @@ class r {
   getIframeUrl() {
     const e = {
       development: "http://localhost:3001",
-      sandbox: "https://your-app.vercel.app",
-      production: "https://your-app.vercel.app"
+      sandbox: "https://payment-widget-ip.vercel.app",
+      production: "https://payment-widget-ip.vercel.app"
     };
     return `${e[this.config.environment] || e.sandbox}`;
   }
