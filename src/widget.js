@@ -26,8 +26,8 @@ class PaymentWidget {
   getIframeUrl() {
     const baseUrls = {
       development: "http://localhost:3001",
-      sandbox: "https://your-app.vercel.app",
-      production: "https://your-app.vercel.app",
+      sandbox: "https://payment-widget-ip.vercel.app",
+      production: "https://payment-widget-ip.vercel.app",
     };
 
     const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;
@@ -46,8 +46,8 @@ class PaymentWidget {
     return new Promise((resolve, reject) => {
       try {
         // Create container styles
-        const widgetContainer = document.createElement('div');
-        widgetContainer.className = 'payment-widget-container';
+        const widgetContainer = document.createElement("div");
+        widgetContainer.className = "payment-widget-container";
         widgetContainer.style.cssText = `
           position: relative;
           width: 100%;
@@ -72,7 +72,7 @@ class PaymentWidget {
 
         this.iframe.onload = () => {
           this.isInitialized = true;
-          
+
           // Send initial configuration to iframe
           setTimeout(() => {
             this.sendToIframe({
@@ -80,8 +80,8 @@ class PaymentWidget {
               data: {
                 amount: this.config.amount,
                 currency: this.config.currency,
-                apiKey: this.config.apiKey
-              }
+                apiKey: this.config.apiKey,
+              },
             });
           }, 100);
 
@@ -90,7 +90,7 @@ class PaymentWidget {
         };
 
         this.iframe.onerror = (error) => {
-          console.error('Iframe loading error:', error);
+          console.error("Iframe loading error:", error);
           reject(new Error("Failed to load payment widget"));
         };
 
@@ -116,7 +116,10 @@ class PaymentWidget {
 
   handleMessage(event) {
     // For development, allow all origins. In production, validate specific origins.
-    if (this.config.environment === 'production' && !this.isValidOrigin(event.origin)) {
+    if (
+      this.config.environment === "production" &&
+      !this.isValidOrigin(event.origin)
+    ) {
       return;
     }
 
@@ -151,7 +154,7 @@ class PaymentWidget {
     if (this.isInitialized) {
       this.sendToIframe({
         type: "UPDATE_CONFIG",
-        data: newConfig
+        data: newConfig,
       });
     }
   }
