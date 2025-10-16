@@ -3,6 +3,7 @@ class PaymentWidget {
     this.config = this.validateConfig(config);
     this.iframe = null;
     this.isInitialized = false;
+    this.messageHandlers = new Map();
   }
 
   validateConfig(config) {
@@ -18,28 +19,19 @@ class PaymentWidget {
       onSuccess: config.onSuccess || (() => {}),
       onError: config.onError || (() => {}),
       onLoad: config.onLoad || (() => {}),
+      onClose: config.onClose || (() => {}),
     };
   }
 
   getIframeUrl() {
     const baseUrls = {
       development: "http://localhost:3001",
-      sandbox: "https://your-vercel-app.vercel.app",
-      production: "https://your-vercel-app.vercel.app",
+      sandbox: "https://your-app.vercel.app",
+      production: "https://your-app.vercel.app",
     };
 
     const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;
-
-    // Remove the query parameters for now since we're serving static files
-    return `${baseUrl}/index.html`;
-
-    // If you need to pass parameters, use hash or implement message-based config
-    // const params = new URLSearchParams({
-    //   apiKey: this.config.apiKey,
-    //   amount: this.config.amount,
-    //   currency: this.config.currency,
-    // });
-    // return `${baseUrl}/index.html#${params.toString()}`;
+    return `${baseUrl}`;
   }
 
   init(container) {
@@ -53,6 +45,17 @@ class PaymentWidget {
 
     return new Promise((resolve, reject) => {
       try {
+        // Create container styles
+        const widgetContainer = document.createElement('div');
+        widgetContainer.className = 'payment-widget-container';
+        widgetContainer.style.cssText = `
+          position: relative;
+          width: 100%;
+          max-width: 440px;
+          margin: 0 auto;
+        `;
+
+        // Create iframe
         this.iframe = document.createElement("iframe");
         this.iframe.src = this.getIframeUrl();
         this.iframe.style.cssText = `
@@ -62,19 +65,37 @@ class PaymentWidget {
           height: 600px;
           border-radius: 12px;
           box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+          background: white;
         `;
+        this.iframe.title = "Payment Widget";
+        this.iframe.allow = "payment *";
 
         this.iframe.onload = () => {
           this.isInitialized = true;
+          
+          // Send initial configuration to iframe
+          setTimeout(() => {
+            this.sendToIframe({
+              type: "INIT_CONFIG",
+              data: {
+                amount: this.config.amount,
+                currency: this.config.currency,
+                apiKey: this.config.apiKey
+              }
+            });
+          }, 100);
+
           this.config.onLoad();
           resolve();
         };
 
-        this.iframe.onerror = () => {
+        this.iframe.onerror = (error) => {
+          console.error('Iframe loading error:', error);
           reject(new Error("Failed to load payment widget"));
         };
 
-        container.appendChild(this.iframe);
+        widgetContainer.appendChild(this.iframe);
+        container.appendChild(widgetContainer);
         this.setupMessageHandling();
       } catch (error) {
         reject(error);
@@ -82,12 +103,22 @@ class PaymentWidget {
     });
   }
 
+  sendToIframe(message) {
+    if (this.iframe && this.iframe.contentWindow) {
+      this.iframe.contentWindow.postMessage(message, this.getIframeUrl());
+    }
+  }
+
   setupMessageHandling() {
-    window.addEventListener("message", this.handleMessage.bind(this));
+    this.messageHandler = this.handleMessage.bind(this);
+    window.addEventListener("message", this.messageHandler);
   }
 
   handleMessage(event) {
-    if (!this.isValidOrigin(event.origin)) return;
+    // For development, allow all origins. In production, validate specific origins.
+    if (this.config.environment === 'production' && !this.isValidOrigin(event.origin)) {
+      return;
+    }
 
     const { type, data } = event.data;
 
@@ -101,16 +132,28 @@ class PaymentWidget {
       case "WIDGET_READY":
         console.log("Payment widget ready");
         break;
+      case "WIDGET_CLOSE":
+        this.config.onClose(data);
+        break;
     }
   }
 
   isValidOrigin(origin) {
     const allowedOrigins = [
       "http://localhost:3001",
-      "https://your-widget-sandbox.netlify.app",
-      "https://your-widget-prod.netlify.app",
+      "https://your-app.vercel.app",
     ];
     return allowedOrigins.includes(origin);
+  }
+
+  updateConfig(newConfig) {
+    this.config = { ...this.config, ...newConfig };
+    if (this.isInitialized) {
+      this.sendToIframe({
+        type: "UPDATE_CONFIG",
+        data: newConfig
+      });
+    }
   }
 
   destroy() {
@@ -119,7 +162,9 @@ class PaymentWidget {
     }
     this.isInitialized = false;
     this.iframe = null;
-    window.removeEventListener("message", this.handleMessage);
+    if (this.messageHandler) {
+      window.removeEventListener("message", this.messageHandler);
+    }
   }
 }
 

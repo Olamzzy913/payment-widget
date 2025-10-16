@@ -2,14 +2,10 @@
   "name": "payment-widget-sdk",
   "type": "module",
   "scripts": {
-    "build:sdk": "vite build --config vite.sdk.config.js",
-    "build:iframe": "vite build --config vite.iframe.config.js",
-    "build:all": "npm run build:iframe && npm run build:sdk",
     "dev:iframe": "vite --config vite.iframe.config.js",
-    "dev:sdk": "vite --config vite.sdk.config.js",
-    "preview": "vite preview --port 3001",
-    "build": "npm run build:all",
-    "serve": "npx serve dist/iframe -p 3001"
+    "build:iframe": "vite build --config vite.iframe.config.js",
+    "build:sdk": "vite build --config vite.sdk.config.js",
+    "preview": "vite preview --port 3001"
   },
   "devDependencies": {
     "vite": "^5.0.0",

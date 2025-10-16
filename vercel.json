@@ -1,43 +1,14 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:all",
-  "outputDirectory": "dist",
-  "routes": [
-    {
-      "src": "/sdk/(.*)",
-      "dest": "/dist/sdk/$1",
-      "headers": {
-        "Content-Type": "application/javascript"
-      }
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/dist/iframe/assets/$1",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/dist/iframe/index.html"
-    }
-  ],
+  "buildCommand": "npm run build:iframe",
+  "outputDirectory": "dist/iframe",
   "headers": [
     {
-      "source": "/(.*).js",
+      "source": "/(.*)",
       "headers": [
         {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).css",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/css"
+          "key": "X-Frame-Options",
+          "value": "ALLOWALL"
         }
       ]
     }

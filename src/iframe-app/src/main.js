@@ -16,7 +16,7 @@ function initApp() {
   } catch (error) {
     console.error('Failed to initialize payment widget:', error);
     document.getElementById('app').innerHTML = `
-      <div style="padding: 20px; text-align: center;">
+      <div style="padding: 20px; text-align: center; color: #666;">
         <h3>Payment Widget</h3>
         <p>Unable to load payment options. Please refresh.</p>
       </div>

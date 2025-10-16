@@ -6,4 +6,4 @@ if (typeof window !== 'undefined') {
 }
 
 // For ES modules
-export { PaymentWidget as default };
+export default PaymentWidget;

@@ -11,10 +11,12 @@ export default defineConfig({
     },
     outDir: "dist/sdk",
     emptyOutDir: true,
-    // Add assets configuration
-    assetsDir: '',
+    rollupOptions: {
+      external: [],
+      output: {
+        globals: {}
+      }
+    },
     sourcemap: false
-  },
-  // Set base path
-  base: './',
+  }
 });
