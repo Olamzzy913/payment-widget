@@ -2,31 +2,49 @@
   "version": 2,
   "buildCommand": "npm run build:all",
   "outputDirectory": "dist",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/sdk/(.*)",
-      "dest": "/sdk/$1"
+      "source": "/sdk/(.*)",
+      "destination": "/sdk/$1"
     },
     {
-      "src": "/iframe/(.*)",
-      "dest": "/iframe/$1"
+      "source": "/iframe/(.*)",
+      "destination": "/iframe/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/iframe/index.html"
+      "source": "/(.*)",
+      "destination": "/iframe/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/sdk/(.*\\.js)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/iframe/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
         {
           "key": "X-Frame-Options",
           "value": "ALLOWALL"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
         }
       ]
     }

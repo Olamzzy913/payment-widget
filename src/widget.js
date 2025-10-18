@@ -23,16 +23,16 @@ class PaymentWidget {
     };
   }
 
-  getIframeUrl() {
-    const baseUrls = {
-      development: "http://localhost:3001",
-      sandbox: "https://payment-widget-ip.vercel.app",
-      production: "https://payment-widget-ip.vercel.app",
-    };
+getIframeUrl() {
+  const baseUrls = {
+    development: "http://localhost:3001",
+    sandbox: "https://payment-widget-alpha.vercel.app/iframe",
+    production: "https://payment-widget-alpha.vercel.app/iframe"
+  };
 
-    const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;
-    return `${baseUrl}`;
-  }
+  const baseUrl = baseUrls[this.config.environment] || baseUrls.sandbox;
+  return `${baseUrl}`;
+}
 
   init(container) {
     if (this.isInitialized) {

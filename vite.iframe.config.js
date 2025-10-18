@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [vue()],
   root: resolve(__dirname, 'src/iframe-app'),
   publicDir: resolve(__dirname, 'public'),
+  base: '/iframe/', // Add this line
   build: {
     outDir: resolve(__dirname, 'dist/iframe'),
     emptyOutDir: true,

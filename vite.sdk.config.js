@@ -18,5 +18,6 @@ export default defineConfig({
       }
     },
     sourcemap: false
-  }
+  },
+  base: '/sdk/' // Add this line
 });
