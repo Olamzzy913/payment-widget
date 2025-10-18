@@ -2,18 +2,18 @@
   "version": 2,
   "buildCommand": "npm run build:all",
   "outputDirectory": "dist",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/sdk/(.*)",
-      "destination": "/sdk/$1"
+      "src": "/sdk/(.*)",
+      "dest": "/sdk/$1"
     },
     {
-      "source": "/iframe/(.*)",
-      "destination": "/iframe/$1"
+      "src": "/iframe/(.*)",
+      "dest": "/iframe/$1"
     },
     {
-      "source": "/(.*)",
-      "destination": "/iframe/index.html"
+      "src": "/(.*)",
+      "dest": "/iframe/index.html"
     }
   ],
   "headers": [
