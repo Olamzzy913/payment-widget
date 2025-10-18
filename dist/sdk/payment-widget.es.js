@@ -23,8 +23,8 @@ class r {
   getIframeUrl() {
     const e = {
       development: "http://localhost:3001",
-      sandbox: "https://payment-widget-ip.vercel.app",
-      production: "https://payment-widget-ip.vercel.app"
+      sandbox: "https://payment-widget-alpha.vercel.app/iframe",
+      production: "https://payment-widget-alpha.vercel.app/iframe"
     };
     return `${e[this.config.environment] || e.sandbox}`;
   }
@@ -33,7 +33,7 @@ class r {
       throw new Error("Widget already initialized");
     if (!e || !(e instanceof HTMLElement))
       throw new Error("Valid container element is required");
-    return new Promise((s, i) => {
+    return new Promise((a, i) => {
       try {
         const t = document.createElement("div");
         t.className = "payment-widget-container", t.style.cssText = `
@@ -59,9 +59,9 @@ class r {
                 apiKey: this.config.apiKey
               }
             });
-          }, 100), this.config.onLoad(), s();
-        }, this.iframe.onerror = (a) => {
-          console.error("Iframe loading error:", a), i(new Error("Failed to load payment widget"));
+          }, 100), this.config.onLoad(), a();
+        }, this.iframe.onerror = (s) => {
+          console.error("Iframe loading error:", s), i(new Error("Failed to load payment widget"));
         }, t.appendChild(this.iframe), e.appendChild(t), this.setupMessageHandling();
       } catch (t) {
         i(t);
@@ -77,8 +77,8 @@ class r {
   handleMessage(e) {
     if (this.config.environment === "production" && !this.isValidOrigin(e.origin))
       return;
-    const { type: s, data: i } = e.data;
-    switch (s) {
+    const { type: a, data: i } = e.data;
+    switch (a) {
       case "PAYMENT_SUCCESS":
         this.config.onSuccess(i);
         break;
